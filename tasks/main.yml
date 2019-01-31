@@ -13,10 +13,13 @@
   debug:
     var: packages_installed
   when: packages_installed.changed
-    
+
+# TODO: move this to handlers
 - name: clean /var/cache/apt/archives/*.deb
   command: apt-get clean
   args:
+    # ansible warns user to use the ansible apt module  for a feature
+    # that is not implemented by the ansible apt module.
     warn: no
   when: packages_installed.changed
   changed_when: false
