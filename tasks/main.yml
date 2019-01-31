@@ -1,2 +1,24 @@
 ---
 # tasks file for ansible-role-apt-install-then-clean
+
+- name: install packages
+  apt:
+    state: "{{ state }}"
+    update_cache: "{{ update_cache }}"
+    autoremove: "{{ autoremove }}"
+    pkg: "{{ packages }}"
+  register: packages_installed
+
+- name: debug packages_installed
+  debug:
+    var: packages_installed
+  when: packages_installed.changed
+    
+- name: clean /var/cache/apt/archives/*.deb
+  command: apt-get clean
+  args:
+    warn: no
+  when: packages_installed.changed
+  changed_when: false
+  
+    
